@@ -1,3 +1,6 @@
+import random
+from joblib import Parallel, delayed
+
 class Network:
     def __init__(self):
         self.layers = []
@@ -53,5 +56,40 @@ class Network:
 
             # calculate average error on all samples
             err /= samples
+            print('epoch %d/%d   error=%f' % (i + 1, epochs, err))
+
+    def fits(self, x_train, y_train, epochs, learning_rate, batch_size):
+        samples = len(x_train)
+        for i in range(epochs):
+            err = 0
+            batch = random.sample(range(samples), batch_size)
+            for j in batch:
+                output = x_train[j]
+                for layer in self.layers:
+                    output = layer.forward_propagation(output)
+                err += self.loss(y_train[j], output)
+                error = self.loss_prime(y_train[j], output)
+                for layer in reversed(self.layers):
+                    error = layer.backward_propagation(error, learning_rate)
+            err /= samples
             if i % 100 == 0:
                 print('epoch %d/%d   error=%f' % (i + 1, epochs, err))
+
+    def fits2h(self, x_train, y_train, learning_rate, i):
+        output = x_train[i]
+        for layer in self.layers:
+            output = layer.forward_propagation(output)
+        e = self.loss(y_train[i], output)
+        error = self.loss_prime(y_train[i], output)
+        for layer in reversed(self.layers):
+            error = layer.backward_propagation(error, learning_rate)
+        return e
+
+    def fits2(self, x_train, y_train, epochs, learning_rate, batch_size):
+        samples = len(x_train)
+        for i in range(epochs):
+            err = 0
+            batch = random.sample(range(samples), batch_size)
+            err += sum(Parallel(n_jobs=8)(delayed(self.fits2h)(x_train, y_train, learning_rate, j) for j in batch))
+            err /= samples
+            print('epoch %d/%d   error=%f' % (i + 1, epochs, err))
