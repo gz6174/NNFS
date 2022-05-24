@@ -46,10 +46,34 @@ Network <- setRefClass(
           } # endfor rev layers
         } # endfor j
         err <- err / samples
-        if (i%%100==0) {
-          cat(paste0("epoch ",i,"/",epochs,"\terror=",signif(err,8),"\n"))
-        }
+        cat(paste0("epoch ",i,"/",epochs,"\terror=",signif(err,8),"\n"))
       } # endfor i
-    } # endfun fit
+    }, # endfun fit
+    fits = function(x_train, y_train, epochs, learning_rate, batch_size) {
+      samples <- nrow(x_train)
+      for (i in seq.int(epochs)) {
+        err <- 0
+        
+        batch <- sample(seq.int(nrow(x_train)), size=batch_size, replace=F)
+        
+        for (j in batch) {
+          output <- matrix(x_train[j, ], 1, ncol(x_train))
+          
+          for (layer in layers) {
+            output <- layer$forward_propagation(output)
+          } # endfor layers
+          
+          err <- err + loss(y_train[j, ], output)
+          
+          error <- loss_prime(y_train[j, ], output)
+          
+          for (layer in rev(layers)) {
+            error <- layer$backward_propagation(error, learning_rate)
+          } # endfor rev layers
+        } # endfor j
+        err <- err / samples
+        cat(paste0("epoch ",i,"/",epochs,"\terror=",signif(err,8),"\n"))
+      } # endfor i
+    } # endfun fits
   )
 )
