@@ -71,6 +71,6 @@ class Network:
                 error = self.loss_prime(y_train[j], output)
                 for layer in reversed(self.layers):
                     error = layer.backward_propagation(error, learning_rate)
-            err /= samples
+            err /= batch_size
             if i % 100 == 0:
                 print('epoch %d/%d   error=%f' % (i + 1, epochs, err))

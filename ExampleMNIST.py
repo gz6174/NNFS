@@ -35,8 +35,8 @@ net.add(FCLayer(50, 10))
 net.add(ActivationLayer(tanh, tanh_prime))
 
 net.use(mse, mse_prime)
-#net.fit(x_train, y_train, epochs=1, learning_rate=0.1)
-net.fits2(x_train, y_train, epochs=100, learning_rate=0.1, batch_size=1000)
+net.fit(x_train, y_train, epochs=10, learning_rate=0.1)
+#net.fits2(x_train, y_train, epochs=100, learning_rate=0.1, batch_size=1000)
 
 
 out = net.predict(x_test[0:3])
