@@ -1,5 +1,7 @@
 using LinearAlgebra
 using Statistics
+using StatsBase
+
 include("Activation.jl")
 include("LossFunction.jl")
 
@@ -50,16 +52,43 @@ function fit(layers::Matrix,
     for i in 1:epochs
         e = 0
         for j in 1:samples
-            output = copy(x[j,:])[:, :]
+            output = Matrix(copy(x[j,:]')[:, :])
             for L in layers
                 output = forward_propagation(L, output)
             end
-            output_error = mse_prime(y, output)
+            e += mse(y[j,:]', output)
+
+            output_error = Matrix(mse_prime(y[j,:][:, :], output')')
             for L in reverse(layers)
                 output_error = backward_propagation(L, output_error, learning_rate)
             end
         end
-        print("Iter: ",string(i),", ",mse(y, output),'\n')
+        print("Iter: ",string(i),", ",e/samples,'\n')
+    end
+end
+
+function fits(layers::Matrix,
+    x::Matrix, y::Matrix,
+    learning_rate::Float64,
+    epochs = 1000,
+    batch_size = 1)
+    samples = size(x)[1]
+    for i in 1:epochs
+        e = 0
+        batch = StatsBase.sample(collect(1:samples), batch_size, replace=false)
+        for j in batch
+            output = Matrix(copy(x[j,:]')[:, :])
+            for L in layers
+                output = forward_propagation(L, output)
+            end
+            e += mse(y[j,:]', output)
+
+            output_error = Matrix(mse_prime(y[j,:][:, :], output')')
+            for L in reverse(layers)
+                output_error = backward_propagation(L, output_error, learning_rate)
+            end
+        end
+        print("Iter: ",string(i),", ",e/length(batch),'\n')
     end
 end
 

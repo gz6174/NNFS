@@ -40,7 +40,8 @@ L6 = ActivationLayer(L5, tgh, tgh_prime)
 
 net = [L1 L2 L3 L4 L5 L6]
 
-fit(net, x_train, y_train, 0.1, 10)
+#fit(net, x_train, y_train, 0.1, 100)
+fits(net, x_train, y_train, 0.1, 100, 1000)
 y_pred = predict(net, x_train)
 mse(y_train, y_pred)
-mse_prime(y_train, y_pred)
+#mse_prime(y_train, y_pred)
