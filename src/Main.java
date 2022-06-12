@@ -2,34 +2,37 @@
 
 public class Main {
     public static void main(String[] args) {
-        int[][] m1 = new int[2][3];
-        fillSeq(m1);
-        Matrix M1 = new Matrix(m1);
+        double[][] x_train = new double[][]{{0, 0}, {0, 1}, {1, 0}, {1, 1}};
+        double[][] y_train = new double[][]{{0}, {1}, {1}, {0}};
 
-        int[][] m2 = new int[3][4];
-        fillSeq(m2);
-        Matrix M2 = new Matrix(m2);
-
-
-        System.out.println(M1);
+        print(x_train);
         System.out.println();
-        System.out.println(M2);
+        print(y_train);
         System.out.println();
+
+        Matrix X = new Matrix(x_train);
+        Matrix Y = new Matrix(y_train);
+
+        Network network = new Network();
+        network.add(new FCLayer(2,3));
+        network.add(new ActivationLayer());
+        network.add(new FCLayer(3,1));
+        network.add(new ActivationLayer());
+
         try {
-            Matrix M3 = M1.dot(M2);
-            System.out.println(M3);
-        } catch(Exception e) {
+            network.fit(X, Y, 1000, 0.1);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    public static void fillSeq(int[][] M) {
-        int k = 1;
-        for (int i = 0; i < M.length; i++) {
-            for (int j = 0; j < M[i].length; j++) {
-                M[i][j] = k++;
+    public static void print(double[][] a) {
+        for (double[] doubles : a) {
+            for (double aDouble : doubles) {
+                System.out.print(aDouble + " ");
             }
+            System.out.println();
         }
     }
 }
