@@ -12,7 +12,7 @@ public class ActivationLayer extends Layer {
 
     public Matrix backward_propagation(Matrix output_error, double learning_rate) throws Exception {
         Matrix result = activation_prime(this.input);
-        return result.dot(output_error);
+        return result.mul(output_error);
     }
 
     public Matrix getOutput() {

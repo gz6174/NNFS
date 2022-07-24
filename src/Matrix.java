@@ -96,6 +96,21 @@ public class Matrix {
         return result;
     }
 
+    public Matrix mul(Matrix N) throws Exception {
+        int inNrow = N.getNrow();
+        int inNcol = N.getNcol();
+        if ((inNrow != this.nrow) | (inNcol != this.ncol)) {
+            throw new Exception("Dimension mismatch");
+        }
+        Matrix result = new Matrix(inNrow, inNcol);
+        for (int i = 0; i < inNrow; i++) {
+            for (int j = 0; j < inNcol; j++) {
+                result.getM()[i][j] = this.getM()[i][j] * N.getM()[i][j];
+            }
+        }
+        return result;
+    }
+
     public void rand() {
         Random r = new Random();
         for (int i = 0; i < nrow; i++) {
@@ -226,6 +241,16 @@ public class Matrix {
         for (int i = 0; i < N.getNrow(); i++) {
             for (int j = 0; j < N.getNcol(); j++) {
                 result.getM()[j][i] = N.getM()[i][j];
+            }
+        }
+        return result;
+    }
+
+    public Matrix t() {
+        Matrix result = new Matrix(this.getNcol(), this.getNrow());
+        for (int i = 0; i < this.getNrow(); i++) {
+            for (int j = 0; j < this.getNcol(); j++) {
+                result.getM()[j][i] = this.getM()[i][j];
             }
         }
         return result;

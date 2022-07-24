@@ -20,7 +20,7 @@ public class Main {
         network.add(new ActivationLayer());
 
         try {
-            network.fit(X, Y, 1000, 0.1);
+            network.fit(X, Y, 10, 0.1);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -20,8 +20,8 @@ public class FCLayer extends Layer {
     }
 
     public Matrix backward_propagation(Matrix output_error, double learning_rate) throws Exception {
-        Matrix input_error = output_error.dot(this.weights.t(this.weights));
-        Matrix weights_error = this.input.t(this.input).dot(output_error);
+        Matrix input_error = output_error.dot(this.weights.t());
+        Matrix weights_error = this.input.t().dot(output_error);
         weights_error.mul(-learning_rate);
         weights.add(weights_error);
         output_error.mul(-learning_rate);
